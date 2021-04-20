@@ -48,7 +48,7 @@ typedef struct{
 } usart_rtos_notification_t;
 
 /*
- * @brief
+ * @brief	Configuration of USART
  *
  */
 typedef struct{
@@ -61,7 +61,7 @@ typedef struct{
 }usart_rtos_config_t;
 
 /*
- * @brief
+ * @brief	handler of used USART
  *
  */
 typedef struct{
@@ -91,49 +91,65 @@ typedef struct{
 
 /*====================[Functions declarations]===============================*/
 /*
- * @brief
- *
+ * @brief	Initialize USART according to config, create task to receive bytes, and initialize Ring buffer
+ * @param	handle:	pointer to handler of used USART
+ * @config	pointer to configuration to use when initialize USART
  */
-int USART_RTOS_Init( usart_rtos_handle_t* handle, const usart_rtos_config_t *config);
+status_t USART_RTOS_Init( usart_rtos_handle_t* handle, const usart_rtos_config_t *config);
 
 /*
- * @brief
+ * @brief	Deinitialize USART and delete task
+ * @param	handle:	pointer to handler of used USART
  *
  */
 void USART_RTOS_Deinit(usart_rtos_handle_t *handle);
 
 /*
- * @brief
+ * @brief	Clean Tx, Rx buffers, and give mutex if taken
+ * @param	handle:	pointer to handler of used USART
  *
  */
 void USART_RTOS_Reset(usart_rtos_handle_t *_handle);
 
 /*
- * @brief
- *
+ * @brief	Starts a Tx transfer or timeout if coudnt send it
+ * @param	handle:	pointer to handler of used USART
+ * @param	toSend: pointer to string to send through handle. Must be a '\0' ended string.
+ * @param	timeout: ticks to wait before exit and cancel transaction
  */
-status_t USART_RTOS_Send( usart_rtos_handle_t *handle, const uint8_t* toSend, size_t sizeToSend, TickType_t timeout );
+status_t USART_RTOS_Send( usart_rtos_handle_t *handle, const uint8_t* toSend, TickType_t timeout );
 
 /*
- * @brief
+ * @brief	Starts an Rx transfer or timeout if no string received
+ * @param	handle:	pointer to handler of used USART
+ * @param	rcvBuff: pointer to buffer where received string will be stored
+ * @param	sizeRcvBuff: size of buffer rcvBuff
+ * @param	timeout: ticks to wait before exit and cancel transaction
  *
  */
 status_t USART_RTOS_Receive( usart_rtos_handle_t *handle, uint8_t* rcvBuff, size_t sizeRcvBuff, TickType_t timeout );
 
 /*
- * @brief
+ * @brief	Starts a Tx, and after that an Rx transfer. if coudnt send or receive the string, timeout
+ * @param	handle:	pointer to handler of used USART
+ * @param	toSend: pointer to string to send through handle. Must be a '\0' ended string.
+ * @param	rcvBuff: pointer to buffer where received string will be stored
+ * @param	sizeRcvBuff: size of buffer rcvBuff
+ * @param	timeout: ticks to wait before exit and cancel transaction
  *
  */
 status_t USART_RTOS_Send_Receive( usart_rtos_handle_t *handle, const uint8_t *toSend, uint8_t* rcvBuff, size_t sizeRcvBuff, TickType_t timeout );
 
 /*
- * @brief
- *
+ * @brief	Sets task to notify when there are no transfer in progress but data ahs arrived
+ * @param	handle:	pointer to handler of used USART
+ * @param	taskNotification: pointer to struct that holds the task and buffer that will be used when URC string comes
  */
 status_t USART_RTOS_SetURC(  usart_rtos_handle_t *handle, usart_rtos_notification_t *taskNotification );
 
 /*
- * @brief
+ * @brief	Used to notify end of URC process to receiver task
+ * @param	handle:	pointer to handler of used USART
  *
  */
 void USART_RTOS_giveFromUrc( usart_rtos_handle_t *handle );

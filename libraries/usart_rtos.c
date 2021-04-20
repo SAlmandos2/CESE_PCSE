@@ -112,7 +112,7 @@ static uint8_t wichUsartUsed( usart_rtos_handle_t* handle )
 }
 
 /*==========[Public functions]======================================================================================================================*/
-int USART_RTOS_Init( usart_rtos_handle_t* handle, const usart_rtos_config_t *config)
+status_t USART_RTOS_Init( usart_rtos_handle_t* handle, const usart_rtos_config_t *config)
 {
 	usart_config_t _usart_config;
 	uint32_t instance = FLEXCOMM_GetInstance(config->base);
@@ -235,7 +235,7 @@ status_t USART_RTOS_SetURC(  usart_rtos_handle_t *handle, usart_rtos_notificatio
 }
 
 
-status_t USART_RTOS_Send( usart_rtos_handle_t *handle, const uint8_t* toSend, size_t sizeToSend, TickType_t timeout )
+status_t USART_RTOS_Send( usart_rtos_handle_t *handle, const uint8_t* toSend, TickType_t timeout )
 {
 	BaseType_t _result;
 	uint32_t _eventFLAGS;
@@ -310,7 +310,7 @@ status_t USART_RTOS_Send_Receive( usart_rtos_handle_t *handle, const uint8_t *to
 	{
 		xTaskCheckForTimeOut( &_timeout, &timeout );
 
-		_status = USART_RTOS_Send( handle, toSend, strlen((char*)toSend), timeout );
+		_status = USART_RTOS_Send( handle, toSend, timeout );
 		if( kStatus_Fail == _status || kStatus_Timeout == _status )
 		{
 			(void)xSemaphoreGive(handle->semaphore);

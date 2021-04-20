@@ -168,7 +168,7 @@ BaseType_t L86_Cmd( TickType_t timeout, const char* fmt, ... )
 	{
 		xTaskCheckForTimeOut( &_timeout, &timeout );
 
-		_status = USART_RTOS_Send( &L86Uart, (uint8_t*)_internalBuff, strlen(_internalBuff), timeout );
+		_status = USART_RTOS_Send( &L86Uart, (uint8_t*)_internalBuff, timeout );
 		(void)xSemaphoreGive( L86Uart.semaphore );
 	}
 
